@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeugnis</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        .custom-btn {
+            background-color: #800020; /* Set custom background color to bordeaux */
+            border-color: #800020; /* Set border color to bordeaux */
+            color: #dee2e6; /* Set text color to white for contrast */
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .custom-btn:hover {
+            background-color: #991133; /* Set custom background color to bordeaux */
+            border-color: #991133; /* Set border color to bordeaux */
+            color: #dee2e6; /* Set text color to white for contrast */
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .loading {
+            cursor: wait;
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    </style>
+    <script>
+
+        function setLoadingState(isLoading) {
+            const form = document.getElementById('dataForm');
+            const body = document.body;
+            const images = document.getElementsByTagName('img');
+            const selects = document.getElementsByTagName('select');
+            const textareas = document.getElementsByTagName('textarea');
+            const allElements = [...images, ...selects, ...textareas];
+
+            if (isLoading) {
+                form.classList.add('disabled');
+                body.classList.add('loading');
+                for (let i = 0; i < allElements.length; i++) {
+                    allElements[i].classList.add('disabled');
+                }
+            } else {
+                form.classList.remove('disabled');
+                body.classList.remove('loading');
+                for (let i = 0; i < allElements.length; i++) {
+                    allElements[i].classList.remove('disabled');
+                }
+            }
+        }
+        function sendXHR(content, elementId, fach) {
+            const name = '{{name}}';
+            //console.log('Vorname:' + name);
+            //console.log('ElementId:' + elementId);
+            //console.log('Content:' + content);
+            setLoadingState(true);
+            fetch('/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: content, fach: fach, name: name })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    element = document.getElementById(elementId);
+                    element.value = data.message;
+                    setLoadingState(false);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setLoadingState(false);
+                });
+        }
+
+        function handleGetBemerkungen(bemerkungenElementId) {
+            const content = document.getElementById(bemerkungenElementId).value;
+            if (content === '') {
+                console.log('Abfrage für ' + bemerkungenElementId + ': Keine Daten angegeben');
+            } else {
+                sendXHR(content, bemerkungenElementId, null);
+            }
+        }
+
+        function handleGetFachBemerkungen(bemerkungenElementId, fachElementId) {
+            const content = document.getElementById(bemerkungenElementId).value;
+            const fach = document.getElementById(fachElementId).value;
+            if (content === '') {
+                console.log('Abfrage für ' + bemerkungenElementId + ': Keine Daten angegeben');
+            } else {
+                console.log('Abfrage für Fach ' + fach + ': ' + content);
+                sendXHR(content, bemerkungenElementId, fach);
+            }
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="nav-link" href="/">
+        <img src="{{ url_for('static', filename='images/logo-schoolreportai.png') }}" alt="Button Image" class="img-fluid" style="width: 8em; height: 8em">
+    </a>
+    <div style="width: 2em"></div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/zeugnisse">Zeugnisse</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">Über</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1>Zeugnis für {{ surname }}, {{ name }}</h1>
+    geboren am {{birthday}}
+    <hr class="w-50">
+    <form id="dataForm" class="form">
+        <h4>Leistungen</h4>
+        <div class="row">
+        <table class="table table-striped w-50">
+            <thead>
+            <tr>
+                <th scope="col" width="35%">Fach</th>
+                <th scope="col" width="15%">&nbsp;</th>
+                <th scope="col" width="35%">Fach</th>
+                <th scope="col" width="15%">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Mathematik</td>
+                <td><input type="number" min="1" max="6" class="form-control" value="1"></td>
+                <td>Englisch</td>
+                <td><input type="number" min="1" max="6" class="form-control" value="2" ></td>
+            </tr>
+            <tr>
+                <td>Deutsch</td>
+                <td><input type="number" min="1" max="6" class="form-control" value="3"></td>
+                <td>Sachunterricht</td>
+                <td><input type="number" min="1" max="6" class="form-control" value="4"></td>
+            </tr>
+            <tr>
+                <td>Kunst</td>
+                <td><input type="number" min="1" max="6" class="form-control"></td>
+                <td>Religion</td>
+                <td><input type="number" min="1" max="6" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>Musik</td>
+                <td><input type="number" min="1" max="6" class="form-control"></td>
+                <td>Sport</td>
+                <td><input type="number" min="1" max="6" class="form-control"></td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </form>
+    <h4>Bemerkungen</h4>
+    <div class="row">
+        <div class="container">
+            <div class="row align-items-center">
+                <div style="width: 45em">
+                    <textarea class="form-control" rows="4" id="bemerkungen_general" ></textarea>
+                </div>
+                <div class="col-md-2 text-center" style="width: 2.5em; height: 2.5em" >
+                       <img src="{{ url_for('static', filename='images/ask-llm-small.png') }}" alt="Button Image" class="img-fluid" onClick="handleGetBemerkungen('bemerkungen_general')"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="mt-5">Fachbezogene Bemerkungen</h4>
+    <div class="row" style="margin-top: 20px;">
+        <div style="margin-bottom: 10px;">
+            <select class="w-20" id="fach_0">
+                <option selected>Mathematik</option>
+                <option>Deutsch</option>
+                <option>Englisch</option>
+                <option>Sachunterricht</option>
+                <option>Musik</option>
+                <option>Kunst</option>
+                <option>Sport</option>
+                </select>
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div style="width: 45em">
+                    <textarea class="form-control" rows="4" id="fach_bemerkungen_0" ></textarea>
+                </div>
+                <div class="col-md-2 text-center" style="width: 2.5em; height: 2.5em" >
+                    <img src="{{ url_for('static', filename='images/ask-llm-small.png') }}" alt="Button Image" class="img-fluid" onClick="handleGetFachBemerkungen('fach_bemerkungen_0', 'fach_0')">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div style="margin-bottom: 10px;">
+            <select class="w-20" id="fach_1">
+                <option>Mathematik</option>
+                <option selected>Deutsch</option>
+                <option>Englisch</option>
+                <option>Sachunterricht</option>
+                <option>Musik</option>
+                <option>Kunst</option>
+                <option>Sport</option>
+            </select>
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div style="width: 45em">
+                    <textarea class="form-control" rows="4" id="fach_bemerkungen_1" ></textarea>
+                </div>
+                <div class="col-md-2 text-center" style="width: 2.5em; height: 2.5em" >
+                    <img src="{{ url_for('static', filename='images/ask-llm-small.png') }}" alt="Button Image" class="img-fluid" onClick="handleGetFachBemerkungen('fach_bemerkungen_1', 'fach_1')">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div style="margin-bottom: 10px;">
+            <select class="w-20" id="fach_2">
+                <option>Mathematik</option>
+                <option>Deutsch</option>
+                <option selected>Englisch</option>
+                <option>Sachunterricht</option>
+                <option>Musik</option>
+                <option>Kunst</option>
+                <option>Sport</option>
+            </select>
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div style="width: 45em">
+                    <textarea class="form-control" rows="4" id="fach_bemerkungen_2" ></textarea>
+                </div>
+                <div class="col-md-2 text-center" style="width: 2.5em; height: 2.5em" >
+                    <img src="{{ url_for('static', filename='images/ask-llm-small.png') }}" alt="Button Image" class="img-fluid" onClick="handleGetFachBemerkungen('fach_bemerkungen_2', 'fach_2')">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px;">
+        <div style="margin-bottom: 10px;">
+            <select class="w-20" id="fach_3">
+                <option>Mathematik</option>
+                <option>Deutsch</option>
+                <option>Englisch</option>
+                <option selected>Sachunterricht</option>
+                <option>Musik</option>
+                <option>Kunst</option>
+                <option>Sport</option>
+            </select>
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div style="width: 45em">
+                    <textarea class="form-control" rows="4" id="fach_bemerkungen_3" ></textarea>
+                </div>
+                <div class="col-md-2 text-center" style="width: 2.5em; height: 2.5em" >
+                    <img src="{{ url_for('static', filename='images/ask-llm-small.png') }}" alt="Button Image" class="img-fluid" onClick="handleGetFachBemerkungen('fach_bemerkungen_3', 'fach_3')">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 40px;"></div>
+    <a class="btn btn-sm w-10 custom-btn" href="/zeugnisse" role="button">Zurück</a>
+    <a class="btn btn-sm w-10 custom-btn" href="/zeugnisse" role="button">Speichern</a>
+    <hr class="w-50">
+    <div class="row" style="margin-bottom: 40px;"></div>
+</div>
+</body>
+</html>

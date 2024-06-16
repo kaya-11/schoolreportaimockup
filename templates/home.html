@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        .custom-btn {
+            background-color: #800020; /* Set custom background color to bordeaux */
+            border-color: #800020; /* Set border color to bordeaux */
+            color: #dee2e6; /* Set text color to white for contrast */
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .custom-:hover {
+            background-color: #991133; /* Set custom background color to bordeaux */
+            border-color: #991133; /* Set border color to bordeaux */
+            color: #dee2e6; /* Set text color to white for contrast */
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="nav-link" href="/">
+        <img src="{{ url_for('static', filename='images/logo-schoolreportai.png') }}" alt="Button Image" class="img-fluid" style="width: 8em; height: 8em">
+    </a>
+    <div style="width: 2em"></div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/zeugnisse">Zeugnisse</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">Über</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">KI unterstützte Zeugniserstellung</h1>
+        <p class="lead">Willkommen im Zeugnis-AI Mock-Up</p>
+        <hr class="my-4">
+        <a class="btn btn-lg custom-btn" href="/zeugnisse" role="button">Zeugnisse</a>
+        <a class="btn btn-lg custom-btn" href="/about" role="button">Über</a>
+    </div>
+</div>
+</body>
+</html>

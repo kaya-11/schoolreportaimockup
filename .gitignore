@@ -1,0 +1,10 @@
+static/.DS_STORE
+static/css/.DS_STORE
+static/js/.DS_STORE
+.DS_STORE
+.idea/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+schoolreportaimockup.iml
