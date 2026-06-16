@@ -1,6 +1,6 @@
 # School Report AI Mockup
 
-**Ein Flask-basiertes Web-Tool zur Generierung von Schulzeugnis-Bemerkungen mit KI-Unterstützung (Ollama).**
+**Ein Flask-basiertes Web-Mockup zur Generierung von Schulzeugnis-Bemerkungen mit KI-Unterstützung (Ollama).**
 
 ---
 
